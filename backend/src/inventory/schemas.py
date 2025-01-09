@@ -22,6 +22,7 @@ class AddInventoryModel(BaseModel):
 
 class InventoryModel(BaseModel):
     batch_id: uuid.UUID
+    p_id: uuid.UUID
     product_name: str
     product_category: str
     vendor_id: str

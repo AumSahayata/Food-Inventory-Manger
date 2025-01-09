@@ -43,3 +43,11 @@ async def add_inventory(inventory_data: AddInventoryModel, session: AsyncSession
     
     if not res:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot add Inventory.")
+
+@inventory_router.patch("/buy/{product_id}", status_code = status.HTTP_200_OK)
+async def buy_product(product_id: str, session: AsyncSession = Depends(get_session)):
+    
+    res = await inventory_ops.update_on_buy(product_id, session)
+    
+    if not res:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot purchase the product. Something went wrong!!")
