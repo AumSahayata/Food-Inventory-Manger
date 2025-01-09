@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-import { AddProductForm } from "../components/add-product-form";
+
+import { AddInventoryForm } from "../components/add-inventory-form";
 
 import { useState } from "react";
 
@@ -35,7 +36,7 @@ const Dashboard = () => {
                 <DialogHeader>
                   <DialogTitle>Add New Inventory</DialogTitle>
                 </DialogHeader>
-                <AddProductForm onClose={() => setIsDialogOpen(false)} />
+                <AddInventoryForm onClose={() => setIsDialogOpen(false)} />
               </DialogContent>
             </Dialog>
           </div>

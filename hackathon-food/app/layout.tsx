@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { ClerkProvider, SignedIn, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Navbar } from "./components/navbar";
 
 const geistSans = Geist({
@@ -31,20 +31,25 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-screen`}
         >
-          <div className="flex flex-col">
-            <header className="bg-white shadow">
-              <div className="max-w-full mx-auto py-4 px-6 sm:px-6 lg:px-6 flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">FOOD</h1>
-                <SignedIn>
+          <SignedIn>
+            <div className="flex flex-col">
+              <header className="bg-white shadow">
+                <div className="max-w-full mx-auto py-4 px-6 sm:px-6 lg:px-6 flex justify-between items-center">
+                  <h1 className="text-2xl font-bold text-gray-900">FOOD</h1>
                   <UserButton showName />
-                </SignedIn>
+                </div>
+              </header>
+
+              <div className="flex">
+                <Navbar />
+
+                <div className="w-full h-full">{children}</div>
               </div>
-            </header>
-            <div className="flex">
-              <Navbar />
-              <div className="w-full h-full">{children}</div>
             </div>
-          </div>
+          </SignedIn>
+          <SignedOut>
+            <div className="w-full h-full">{children}</div>
+          </SignedOut>
         </body>
       </html>
     </ClerkProvider>
