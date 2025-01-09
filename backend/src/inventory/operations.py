@@ -1,7 +1,8 @@
+from pydoc import text
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .models import *
 from .schemas import *
-from sqlmodel import select, update, insert
+from sqlmodel import select, update, insert, case
 from datetime import timedelta 
 
 class InventoryOperations():
@@ -120,3 +121,47 @@ class InventoryOperations():
         await session.commit()
 
         return {"message": "Sale recorded successfully"}
+    
+    
+    async def check_and_insert_expiry(self, session: AsyncSession):
+        today = date.today()
+
+        # Query to filter products based on the expiry criteria
+        statement = (
+        select(
+            Inventory.batch_id,
+            Inventory.product_id,
+            Products.category,
+            (Inventory.expiry_date - today).label("days_remaining")
+        )
+        .join(Products, Inventory.product_id == Products.p_id)
+        .where(
+            case(
+                # Dairy: expiry days <= 2
+                (Products.category == "Dairy", (Inventory.expiry_date - today) <= 2),
+                # F&V: expiry days <= 1
+                (Products.category == "F&V", (Inventory.expiry_date - today) <= 1),
+            )
+        )
+        )
+
+        result = await session.execute(statement)
+        expiring_products = result.all()
+
+        # Insert matching records into the Expiry table
+        for batch_id, product_id, category, days_remaining in expiring_products:
+            insert_statement = (
+                insert(Expiry)
+                .values(
+                    batch_id=batch_id,
+                    product_id=product_id,
+                    days_remaining=days_remaining,
+                    date_added=today
+                )
+            )
+            await session.execute(insert_statement)
+
+        # Commit changes
+        await session.commit()
+
+        return {"message": "Expiry table updated"}

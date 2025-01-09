@@ -52,4 +52,16 @@ class Sales(SQLModel, table=True):
     quantity_sold: int
 
 class Expiry(SQLModel, table=True):
-    
+    __tablename__ = "expiry"
+    uid: uuid.UUID = Field(
+        sa_column = Column(
+            pg.UUID,
+            nullable = False,
+            primary_key = True,
+            default = uuid.uuid4
+        )
+    )
+    batch_id: uuid.UUID = Field(foreign_key="inventory.batch_id", default=None)
+    product_id: uuid.UUID = Field(foreign_key="products.p_id", default=None)
+    days_remaining: int
+    date_added: date = Field(sa_column=Column(pg.TIMESTAMP, default=date.today()))
