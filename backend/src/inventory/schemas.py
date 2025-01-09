@@ -37,3 +37,8 @@ class ExpiryData(BaseModel):
     product_name: str
     days_remaining: int
     date_added: date
+    
+class DiscountData(BaseModel):
+    batch_id: uuid.UUID
+    is_discounted: bool
+    discount_percentage: float

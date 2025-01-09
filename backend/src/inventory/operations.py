@@ -194,3 +194,13 @@ class InventoryOperations():
             for row in result
         ]
         return expiry_data
+
+    async def add_discount(self, discount_data: DiscountData, session: AsyncSession):
+        update_data_dict = discount_data.model_dump()
+        
+        res = update(Inventory).where(Inventory.batch_id == update_data_dict['batch_id']).values(is_discounted = update_data_dict["is_discounted"], discount_percentage = update_data_dict["discount_percentage"])
+        
+        await session.execute(res)
+        await session.commit()
+        
+        return res

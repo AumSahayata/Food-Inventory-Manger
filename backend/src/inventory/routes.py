@@ -61,3 +61,11 @@ async def get_expity(vendor_id:str, session: AsyncSession = Depends(get_session)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No expiry products not found")
     
     return res
+
+@inventory_router.patch("/discount", status_code=status.HTTP_200_OK)
+async def make_discounted(discount_data:DiscountData, session: AsyncSession = Depends(get_session)):
+    
+    res = await inventory_ops.add_discount(discount_data, session)
+    
+    # if not res:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cannot add discount")
