@@ -10,42 +10,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addInventory } from "../actions/foodactions";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
-export function AddInventoryForm({ onClose }: { onClose: () => void }) {
+export function AddInventoryForm({
+  onClose,
+  data,
+}: {
+  onClose: () => void;
+  data: any;
+}) {
   const [product, setProduct] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    const datestring = date?.toISOString().split("T")[0];
     e.preventDefault();
-    console.log();
+    addInventory(product,quantity,date)
     onClose();
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="category">Choose Product</Label>
+        <Label htmlFor="product">Choose Product</Label>
         <Select value={product} onValueChange={setProduct} required>
-          <SelectTrigger id="category">
-            <SelectValue placeholder="Select a category" />
+          <SelectTrigger id="product">
+            <SelectValue placeholder="Select a Product" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="electronics">Dairy</SelectItem>
-            <SelectItem value="clothing">
-              Fruits and Vegetables (1kg)
-            </SelectItem>
+            <SelectContent>
+              {data.map((item) => (
+                <SelectItem key={item.p_id} value={item.p_id}>
+                  {item.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </SelectContent>
         </Select>
       </div>
@@ -61,7 +60,10 @@ export function AddInventoryForm({ onClose }: { onClose: () => void }) {
           required
         />
       </div>
-     
+      <div className="flex flex-col space-y-2">
+        <Label htmlFor="date">Expiry Date</Label>
+        <input type="date" onChange={(e) => setDate(e.target.value)} />
+      </div>
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel

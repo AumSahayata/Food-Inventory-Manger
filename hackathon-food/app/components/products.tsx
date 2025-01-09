@@ -9,6 +9,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -19,7 +20,7 @@ import { AddProductForm } from "../components/add-product-form";
 
 import { useState } from "react";
 
-const Products = () => {
+const Products = ({ data }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <div>
@@ -49,7 +50,17 @@ const Products = () => {
             </TableRow>
           </TableHeader>
 
-          <TableBody></TableBody>
+          <TableBody>
+            {data.map((product) => {
+              return (
+                <TableRow key={product.p_id}>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.category}</TableCell>
+                  <TableCell>{product.price}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
         </Table>
       </div>
     </div>

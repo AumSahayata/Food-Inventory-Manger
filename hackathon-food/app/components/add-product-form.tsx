@@ -10,15 +10,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addProduct } from "../actions/foodactions";
+
 
 export function AddProductForm({ onClose }: { onClose: () => void }) {
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleSubmit =  (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ productName, category, price });
+    addProduct(productName,category,price)
     onClose();
   };
 
@@ -40,8 +43,10 @@ export function AddProductForm({ onClose }: { onClose: () => void }) {
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="electronics">Dairy</SelectItem>
-            <SelectItem value="clothing">Fruits and Vegetables (1kg)</SelectItem>
+            <SelectItem value="Dairy">Dairy</SelectItem>
+            <SelectItem value="F&V">
+              Fruits and Vegetables (1kg)
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>

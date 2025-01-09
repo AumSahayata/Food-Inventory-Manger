@@ -10,17 +10,17 @@ import {
   Table,
   TableBody,
   TableHead,
+  TableCell,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-
 import { AddInventoryForm } from "../components/add-inventory-form";
 
 import { useState } from "react";
 
-const Dashboard = () => {
+const Dashboard = ({ data, inven }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <div>
@@ -36,7 +36,10 @@ const Dashboard = () => {
                 <DialogHeader>
                   <DialogTitle>Add New Inventory</DialogTitle>
                 </DialogHeader>
-                <AddInventoryForm onClose={() => setIsDialogOpen(false)} />
+                <AddInventoryForm
+                  data={data}
+                  onClose={() => setIsDialogOpen(false)}
+                />
               </DialogContent>
             </Dialog>
           </div>
@@ -48,12 +51,22 @@ const Dashboard = () => {
               <TableHead>Product</TableHead>
               <TableHead>Quantity</TableHead>
               <TableHead>Expiry Date</TableHead>
-              <TableHead>Expiry In (Days)</TableHead>
               <TableHead colSpan={1}></TableHead>
             </TableRow>
           </TableHeader>
 
-          <TableBody></TableBody>
+          <TableBody>
+            {inven.map((inven) => {
+              return (
+                <TableRow key={inven.batch_id}>
+                  <TableCell>{inven.batch_id}</TableCell>
+                  <TableCell>{inven.product_name}</TableCell>
+                  <TableCell>{inven.quantity}</TableCell>
+                  <TableCell>{inven.expiry_date}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
         </Table>
       </div>
     </div>
