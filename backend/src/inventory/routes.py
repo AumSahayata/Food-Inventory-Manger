@@ -51,3 +51,13 @@ async def buy_product(product_id: str, session: AsyncSession = Depends(get_sessi
     
     if not res:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot purchase the product. Something went wrong!!")
+
+@inventory_router.get("/expiry/{vendor_id}", response_model=List[ExpiryData])
+async def get_expity(vendor_id:str, session: AsyncSession = Depends(get_session)):
+    
+    res = await inventory_ops.get_vendor_expiry(vendor_id, session)
+    
+    if not res:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No expiry products not found")
+    
+    return res

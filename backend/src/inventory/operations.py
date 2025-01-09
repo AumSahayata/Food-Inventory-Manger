@@ -3,7 +3,6 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from .models import *
 from .schemas import *
 from sqlmodel import select, update, insert, case
-from datetime import timedelta 
 
 class InventoryOperations():
     
@@ -37,6 +36,8 @@ class InventoryOperations():
         Inventory.batch_id,
         Inventory.vendor_id,
         Inventory.quantity,
+        Inventory.is_discounted,
+        Inventory.discount_percentage,
         Inventory.expiry_date).join(Inventory, Inventory.product_id == Products.p_id).where(Inventory.vendor_id == vendor_id))
         
         result = await session.execute(statement)
@@ -52,11 +53,12 @@ class InventoryOperations():
                 "batch_id": row.batch_id,
                 "vendor_id": row.vendor_id,
                 "quantity": row.quantity,
+                "is_discounted": row.is_discounted,
+                "discount_percentage": row.discount_percentage,
                 "expiry_date": row.expiry_date
             }
             for row in rows
         ]
-        print(inventory_list)
 
         return inventory_list
     
@@ -93,9 +95,7 @@ class InventoryOperations():
         
     async def add_sales(self, product_id: str, session: AsyncSession):
         
-        check_date = date.today()
-        check_date = check_date + timedelta(days=1)
-        
+        check_date = date.today()        
         sale_statement = select(Sales).where(Sales.product_id == product_id,Sales.sale_date == check_date)
         result = await session.execute(sale_statement)
         existing_sale = result.scalar_one_or_none()
@@ -131,6 +131,7 @@ class InventoryOperations():
         select(
             Inventory.batch_id,
             Inventory.product_id,
+            Inventory.vendor_id,
             Products.category,
             (Inventory.expiry_date - today).label("days_remaining")
         )
@@ -149,19 +150,47 @@ class InventoryOperations():
         expiring_products = result.all()
 
         # Insert matching records into the Expiry table
-        for batch_id, product_id, category, days_remaining in expiring_products:
+        for batch_id, product_id, vendor_id, category, days_remaining in expiring_products:
             insert_statement = (
                 insert(Expiry)
                 .values(
                     batch_id=batch_id,
                     product_id=product_id,
+                    vendor_id=vendor_id,
                     days_remaining=days_remaining,
                     date_added=today
                 )
             )
             await session.execute(insert_statement)
-
-        # Commit changes
+            
         await session.commit()
 
         return {"message": "Expiry table updated"}
+    
+    
+    async def get_vendor_expiry(self, vendor_id:str, session: AsyncSession):
+        statement = (
+        select(
+            Expiry.batch_id,
+            Expiry.product_id,
+            Expiry.days_remaining,
+            Expiry.date_added,
+            Products.name.label("product_name")
+        )
+        .join(Products, Expiry.product_id == Products.p_id)).where(Expiry.vendor_id == vendor_id)
+
+        # Execute the query
+        result = await session.execute(statement)
+
+        # Process results
+        expiry_data = [
+            {
+                "batch_id": row.batch_id,
+                "product_id": row.product_id,
+                "product_name": row.product_name,
+                "days_remaining": row.days_remaining,
+                "date_added": row.date_added,
+            }
+            for row in result
+        ]
+        return expiry_data

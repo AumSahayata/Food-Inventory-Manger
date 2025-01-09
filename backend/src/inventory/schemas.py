@@ -27,4 +27,13 @@ class InventoryModel(BaseModel):
     product_category: str
     vendor_id: str
     quantity: int
+    is_discounted: bool
+    discount_percentage: float
     expiry_date: date
+
+class ExpiryData(BaseModel):
+    batch_id: uuid.UUID
+    product_id: uuid.UUID
+    product_name: str
+    days_remaining: int
+    date_added: date

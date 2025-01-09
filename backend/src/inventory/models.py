@@ -31,6 +31,8 @@ class Inventory(SQLModel, table=True):
     product_id: uuid.UUID = Field(foreign_key="products.p_id", default=None)
     vendor_id: str
     quantity: int
+    is_discounted: bool = Field(default=False)
+    discount_percentage: float = Field(default=0)
     expiry_date: date
     created_at: date = Field(sa_column=Column(pg.TIMESTAMP, default=date.today()))
     
@@ -48,7 +50,7 @@ class Sales(SQLModel, table=True):
     product_id: uuid.UUID = Field(foreign_key="products.p_id", default=None)
     sale_date: date
     is_holiday: bool
-    sale_day: int
+    sale_day: str
     quantity_sold: int
 
 class Expiry(SQLModel, table=True):
@@ -63,5 +65,6 @@ class Expiry(SQLModel, table=True):
     )
     batch_id: uuid.UUID = Field(foreign_key="inventory.batch_id", default=None)
     product_id: uuid.UUID = Field(foreign_key="products.p_id", default=None)
+    vendor_id: str
     days_remaining: int
     date_added: date = Field(sa_column=Column(pg.TIMESTAMP, default=date.today()))
