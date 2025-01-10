@@ -18,7 +18,7 @@ class InventoryOperations():
         ).join(
             Inventory, Inventory.product_id == Products.p_id
         )).where(
-            Inventory.vendor_id == vendor_id
+            Products.vendor_id == vendor_id
         )
         
         # Execute the query
