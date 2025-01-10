@@ -7,6 +7,15 @@ from .utils import predict, send_email
 
 class InventoryOperations():
     
+    async def get_all_products(self, vendor_id:str, session: AsyncSession):
+        statement = select(Products).where(Products.vendor_id == vendor_id)
+        
+        result = await session.execute(statement)
+
+        products = result.scalars().all()
+        
+        return products
+    
     async def get_products(self, vendor_id:str, session: AsyncSession):
         statement = (select(
             Products.name, 
@@ -15,11 +24,8 @@ class InventoryOperations():
             Inventory.is_discounted, 
             Inventory.discount_percentage, 
             Products.price
-        ).join(
-            Inventory, Inventory.product_id == Products.p_id
-        )).where(
-            Products.vendor_id == vendor_id
-        )
+        ).join(Inventory, Products.p_id == Inventory.product_id
+        )).where(Inventory.vendor_id == vendor_id).where(Products.vendor_id == vendor_id)
         
         # Execute the query
         result = await session.execute(statement)

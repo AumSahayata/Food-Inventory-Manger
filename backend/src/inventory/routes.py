@@ -8,8 +8,18 @@ from .operations import InventoryOperations
 inventory_router = APIRouter()
 inventory_ops = InventoryOperations()
 
-@inventory_router.get("/products/{vendor_id}", response_model=List[ProductModel])
+@inventory_router.get("/all/{vendor_id}", response_model=List[ProductModel])
 async def get_all_products(vendor_id:str, session: AsyncSession = Depends(get_session)):
+    
+    products = await inventory_ops.get_all_products(vendor_id, session)
+    
+    if products:
+        return products
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="products not found")
+
+@inventory_router.get("/products/{vendor_id}", response_model=List[AllProductModel])
+async def get_products(vendor_id:str, session: AsyncSession = Depends(get_session)):
     
     products = await inventory_ops.get_products(vendor_id, session)
     

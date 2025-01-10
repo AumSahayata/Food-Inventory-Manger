@@ -2,7 +2,14 @@ from pydantic import BaseModel
 from datetime import date
 import uuid
 
+
 class ProductModel(BaseModel):
+    p_id: uuid.UUID
+    category: str
+    name: str
+    price: float
+
+class AllProductModel(BaseModel):
     product_name: str
     product_id: uuid.UUID
     product_category: str
