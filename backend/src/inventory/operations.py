@@ -23,6 +23,7 @@ class InventoryOperations():
             Products.category,  # Added category field here
             Inventory.is_discounted, 
             Inventory.discount_percentage, 
+            Inventory.batch_id,
             Products.price
         ).join(Inventory, Products.p_id == Inventory.product_id
         )).where(Inventory.vendor_id == vendor_id).where(Products.vendor_id == vendor_id)
@@ -41,7 +42,8 @@ class InventoryOperations():
                 "product_category": product[2],  # Added category to the response
                 "is_discounted": product[3],
                 "discount_percentage": product[4],
-                "price": product[5]
+                "batch_id": product[5],
+                "price": product[6]
             }
             for product in products
         ]
@@ -264,5 +266,11 @@ class InventoryOperations():
         statement = (select(Products.name).join(Expiry, Expiry.product_id == Products.p_id)).where(Expiry.date_added == today).where(Expiry.vendor_id == vendor_id)
 
         # Execute the query
+        result = await session.execute(statement)
+        return result.scalars().all()
+    
+    async def get_sales_data(self, product_id: str, session: AsyncSession):
+        statement = select(Sales.quantity_sold, Sales.sale_date).where(Sales.product_id == product_id)
+        
         result = await session.execute(statement)
         return result.scalars().all()

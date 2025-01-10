@@ -80,8 +80,15 @@ async def make_discounted(discount_data:DiscountData, session: AsyncSession = De
     # if not res:
     #   raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cannot add discount")
 
-@inventory_router.post("/predict")
+@inventory_router.post("/predict", status_code=status.HTTP_200_OK)
 async def make_prediction(prediction_data:PredictData, session: AsyncSession = Depends(get_session)):
     res = await inventory_ops.prediction(prediction_data, session)
 
     return {"prediction":int(round(res[0]))}
+
+@inventory_router.get("/sales/{product_id}", response_model=List[SalesData])
+async def get_sales(product_id: str, session: AsyncSession = Depends(get_session)):
+
+    res = await inventory_ops.get_sales_data(product_id, session)
+    
+    return res

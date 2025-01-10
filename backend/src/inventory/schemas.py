@@ -15,6 +15,7 @@ class AllProductModel(BaseModel):
     product_category: str
     is_discounted: bool
     discount_percentage: float
+    batch_id: uuid.UUID
     price: float
 
 class AddProductModel(BaseModel):
@@ -55,4 +56,7 @@ class DiscountData(BaseModel):
 class PredictData(BaseModel):
     product_name: str
     product_id: str
-    
+
+class SalesData(BaseModel):
+    sale_date: date
+    sale_quantity: int
