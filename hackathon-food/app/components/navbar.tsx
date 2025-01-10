@@ -10,6 +10,7 @@ export const Navbar = () => {
     { href: "/", label: "Inventory" },
     { href: "/products", label: "Products" },
     { href: "/expiry", label: "Nearing Expiry" },
+    { href: "/analytics", label: "Analytics(Experimental)" },
   ];
 
   return (
