@@ -13,7 +13,10 @@ const getNearExpiryProducts = async (id) => {
   );
   const data = await response.json();
   console.log(data);
-  return data;
+  if(data.detail){
+    return []
+  }
+  return data
 };
 
 import Expiry from "../components/expiry";

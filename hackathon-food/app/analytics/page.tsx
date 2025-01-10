@@ -12,7 +12,10 @@ const getProduct = async (id) => {
   const response = await fetch(`${process.env.BASE_URL}/api/inv/all/${id}`);
   const data = await response.json();
   console.log(data);
-  return data;
+  if(data.detail){
+    return []
+  }
+  return data
 };
 const getSales = async (productId) => {
   //   const response = await fetch(
