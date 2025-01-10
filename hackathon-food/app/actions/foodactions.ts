@@ -36,3 +36,17 @@ export const addInventory = async (productId, quantity, date) => {
   });
   revalidatePath("/");
 };
+
+export const discount = async (batchId, percent) => {
+  await fetch(`${process.env.BASE_URL}/api/inv/discount`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      batch_id: batchId,
+      is_discounted: true,
+      discount_percentage: Number(percent),
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};

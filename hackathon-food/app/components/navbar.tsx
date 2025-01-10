@@ -9,6 +9,7 @@ export const Navbar = () => {
   const navLinks = [
     { href: "/", label: "Inventory" },
     { href: "/products", label: "Products" },
+    { href: "/expiry", label: "Nearing Expiry" },
   ];
 
   return (
