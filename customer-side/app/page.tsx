@@ -6,6 +6,9 @@ const getProduct = async () => {
   );
   const data = await response.json();
   console.log(data);
+  if (data.detail) {
+    return [];
+  }
   return data;
 };
 
