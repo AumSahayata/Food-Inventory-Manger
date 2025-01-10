@@ -56,13 +56,13 @@ const Dashboard = ({ data, inven }) => {
           </TableHeader>
 
           <TableBody>
-            {inven.map((inven) => {
+            {inven.map((inv) => {
               return (
-                <TableRow key={inven.batch_id}>
-                  <TableCell>{inven.batch_id}</TableCell>
-                  <TableCell>{inven.product_name}</TableCell>
-                  <TableCell>{inven.quantity}</TableCell>
-                  <TableCell>{inven.expiry_date}</TableCell>
+                <TableRow key={inv.batch_id}>
+                  <TableCell>{inv.batch_id}</TableCell>
+                  <TableCell>{inv.product_name}</TableCell>
+                  <TableCell>{inv.quantity}</TableCell>
+                  <TableCell>{inv.expiry_date}</TableCell>
                 </TableRow>
               );
             })}
