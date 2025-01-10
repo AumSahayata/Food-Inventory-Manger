@@ -42,7 +42,7 @@ export function ProductCard({ product }: { product: any }) {
               </span>
             </>
           ) : (
-            <span className="text-gray-600">${product.price.toFixed(2)}</span>
+            <span className="text-gray-600">&#8377;{product.price.toFixed(2)}</span>
           )}
         </div>
         <button
