@@ -36,8 +36,10 @@ const Products = ({ products }) => {
   //     ))}
   //   </div>
   // </div>
-  const discountedProducts = products.filter((product) => product.discount);
-  const regularProducts = products.filter((product) => !product.discount);
+  const discountedProducts = products.filter(
+    (product) => product.is_discounted
+  );
+  const regularProducts = products.filter((product) => !product.is_discounted);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -48,7 +50,7 @@ const Products = ({ products }) => {
           <h2 className="text-2xl font-bold mb-4">Hot Deals</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {discountedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.p_id} product={product} />
             ))}
           </div>
         </section>
@@ -58,7 +60,7 @@ const Products = ({ products }) => {
         <h2 className="text-2xl font-bold mb-4">All Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {regularProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.p_id} product={product} />
           ))}
         </div>
       </section>

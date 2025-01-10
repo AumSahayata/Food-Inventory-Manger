@@ -50,3 +50,20 @@ export const discount = async (batchId, percent) => {
     },
   });
 };
+
+export const fetchPrediction = async (product, productName) => {
+  console.log("start predicting");
+  const response = await fetch(`${process.env.BASE_URL}/api/inv/predict`, {
+    method: "POST",
+    body: JSON.stringify({
+      product_name: productName,
+      product_id: product,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data =await response.json();
+  console.log(data);
+  return data;
+};

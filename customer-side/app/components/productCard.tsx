@@ -11,23 +11,23 @@ export function ProductCard({ product }: { product: any }) {
     toast.success(`1 purchased`);
     await purchase(id);
   };
-  const discountedPrice = product.discount
-    ? product.price * (1 - product.discount / 100)
+  const discountedPrice = product.discount_percentage
+    ? product.price * (1 - product.discount_percentage / 100)
     : product.price;
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <Image
         src={image}
-        alt={product.name}
+        alt={product.product_name}
         width={200}
         height={200}
         className="w-full h-48 object-cover"
       />
       <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+        <h2 className="text-xl font-semibold mb-2">{product.product_name}</h2>
         <div className="mb-4">
-          {product.discount ? (
+          {product.discount_percentage!==0 ? (
             <>
               <span className="text-gray-600 line-through mr-2">
                 ${product.price.toFixed(2)}
@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: any }) {
                 ${discountedPrice.toFixed(2)}
               </span>
               <span className="ml-2 text-green-600">
-                ({product.discount}% off)
+                ({product.discount_percentage}% off)
               </span>
             </>
           ) : (

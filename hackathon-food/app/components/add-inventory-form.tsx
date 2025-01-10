@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { addInventory } from "../actions/foodactions";
+import { addInventory, fetchPrediction } from "../actions/foodactions";
+
+import { LoaderCircle } from "lucide-react";
 
 export function AddInventoryForm({
   onClose,
@@ -22,10 +24,24 @@ export function AddInventoryForm({
   const [product, setProduct] = useState("");
   const [quantity, setQuantity] = useState("");
   const [date, setDate] = useState("");
+  const [productName, setProductName] = useState("");
+  const [predictedValue, setPredictedValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const predict = async () => {
+      setIsLoading(true);
+      const data = await fetchPrediction(product, productName);
+      setPredictedValue(data.prediction);
+      setIsLoading(false);
+    };
+
+    predict();
+  }, [product, productName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addInventory(product,quantity,date)
+    addInventory(product, quantity, date);
     onClose();
   };
 
@@ -33,7 +49,17 @@ export function AddInventoryForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="product">Choose Product</Label>
-        <Select value={product} onValueChange={setProduct} required>
+        <Select
+          value={product}
+          onValueChange={(id) => {
+            const selectedProduct = data.find((item) => item.p_id === id);
+            if (selectedProduct) {
+              setProductName(selectedProduct.name);
+              setProduct(id);
+            }
+          }}
+          required
+        >
           <SelectTrigger id="product">
             <SelectValue placeholder="Select a Product" />
           </SelectTrigger>
@@ -60,6 +86,12 @@ export function AddInventoryForm({
           required
         />
       </div>
+      {product && productName && (
+        <div className="text-green-500">Forecasted Sales : {predictedValue}</div>
+      )}
+      {!predictedValue && product && productName && (
+        <LoaderCircle className="w-6 h-6 animate-spin" />
+      )}
       <div className="flex flex-col space-y-2">
         <Label htmlFor="date">Expiry Date</Label>
         <input type="date" onChange={(e) => setDate(e.target.value)} />

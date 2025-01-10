@@ -6,7 +6,7 @@ import Products from "../components/products";
 const getProduct = async (id) => {
   console.log(id);
   const response = await fetch(
-    `${process.env.BASE_URL}/api/inv/products/${id}`
+    `${process.env.BASE_URL}/api/inv/all/${id}`
   );
   const data = await response.json();
   console.log(data);
