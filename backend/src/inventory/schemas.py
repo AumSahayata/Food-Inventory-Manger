@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 from datetime import date
 import uuid
@@ -42,3 +43,8 @@ class DiscountData(BaseModel):
     batch_id: uuid.UUID
     is_discounted: bool
     discount_percentage: float
+
+class PredictData(BaseModel):
+    product_name: str
+    product_id: str
+    

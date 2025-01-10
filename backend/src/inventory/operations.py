@@ -1,8 +1,9 @@
-from pydoc import text
+import datetime
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .models import *
 from .schemas import *
 from sqlmodel import select, update, insert, case
+from .utils import predict
 
 class InventoryOperations():
     
@@ -204,3 +205,18 @@ class InventoryOperations():
         await session.commit()
         
         return res
+    
+    async def prediction(self, prediction_data: PredictData, session: AsyncSession):
+        prediction_data = prediction_data.model_dump()
+        month = datetime.datetime.now().month
+        prod_cat = await self.get_category(prediction_data["product_id"], session) 
+        data = [month, prediction_data["product_name"], prod_cat, date.today().isoweekday(), 0]
+        result = predict(data)
+        
+        return result
+    
+    async def get_category(self, product_id: str, session: AsyncSession):
+        res = select(Products.category).where(Products.p_id==product_id)
+        result = await session.execute(res)
+        category = result.scalars().first()
+        return category

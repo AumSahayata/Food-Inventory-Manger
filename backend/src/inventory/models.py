@@ -50,7 +50,7 @@ class Sales(SQLModel, table=True):
     product_id: uuid.UUID = Field(foreign_key="products.p_id", default=None)
     sale_date: date
     is_holiday: bool
-    sale_day: str
+    sale_day: int
     quantity_sold: int
 
 class Expiry(SQLModel, table=True):
