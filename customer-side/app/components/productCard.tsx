@@ -25,7 +25,9 @@ export function ProductCard({ product }: { product: any }) {
         className="w-full h-48 object-cover"
       />
       <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2">{product.product_name}</h2>
+        <h2 className="text-xl text-black font-semibold mb-2">
+          {product.product_name}
+        </h2>
         <div className="mb-4">
           {product.discount_percentage !== 0 ? (
             <>
