@@ -50,7 +50,7 @@ const Products = ({ products }) => {
           <h2 className="text-2xl font-bold mb-4">Hot Deals</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {discountedProducts.map((product) => (
-              <ProductCard key={product.product_id} product={product} />
+              <ProductCard key={product.batch_id} product={product} />
             ))}
           </div>
         </section>
@@ -60,7 +60,7 @@ const Products = ({ products }) => {
         <h2 className="text-2xl font-bold mb-4">All Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {regularProducts.map((product) => (
-            <ProductCard key={product.product_id} product={product} />
+            <ProductCard key={product.batch_id} product={product} />
           ))}
         </div>
       </section>

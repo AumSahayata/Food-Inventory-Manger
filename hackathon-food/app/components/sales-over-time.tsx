@@ -31,13 +31,11 @@ ChartJS.register(
   Legend
 );
 
-const SalesOverTime = ({ salesData, data,func }) => {
+const SalesOverTime = ({ salesData, data }) => {
   const [productChosen, setProductChosen] = useState("");
 
-  useEffect(() => {
-    func(productChosen)
-  }, [productChosen]);
-  
+  useEffect(() => {}, [productChosen]);
+
   const chartData = {
     labels: salesData.map((entry) => entry.date), // Dates on X-axis
     datasets: [

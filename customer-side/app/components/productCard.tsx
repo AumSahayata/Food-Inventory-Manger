@@ -32,7 +32,7 @@ export function ProductCard({ product }: { product: any }) {
           {product.discount_percentage !== 0 ? (
             <>
               <span className="text-gray-600 line-through mr-2">
-                ${product.price.toFixed(2)}
+                &#8377;{product.price.toFixed(2)}
               </span>
               <span className="text-red-600 font-semibold">
                 &#8377;{discountedPrice.toFixed(2)}

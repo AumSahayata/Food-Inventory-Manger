@@ -12,32 +12,32 @@ const getProduct = async (id) => {
   const response = await fetch(`${process.env.BASE_URL}/api/inv/all/${id}`);
   const data = await response.json();
   console.log(data);
-  if(data.detail){
-    return []
+  if (data.detail) {
+    return [];
   }
-  return data
+  return data;
 };
-const getSales = async (productId) => {
-  //   const response = await fetch(
-  //     `${process.env.BASE_URL}/api/inv/products/${id}`
-  //   );
-  //   const data = await response.json();
-  //   return data;
-};
+// const getSales = async (productId) => {
+//   //   const response = await fetch(
+//   //     `${process.env.BASE_URL}/api/inv/products/${id}`
+//   //   );
+//   //   const data = await response.json();
+//   //   return data;
+// };
 import SalesOverTime from "../components/sales-over-time";
 export default async function SalesPage() {
   const user = await currentUser();
   const product = await getProduct(user?.id);
-  const getSalesData = async (productId) => {
-    "use server";
-    const salesData = await getSales(productId);
-  };
+  //   const getSalesData = async (productId) => {
+  //     "use server";
+  //     const salesData = await getSales(productId);
+  //   };
 
   return (
     <SalesOverTime
       salesData={mockSalesData}
       data={product}
-      func={getSalesData}
+      //   func={getSalesData}
     />
   );
 }
