@@ -46,7 +46,7 @@ export function ProductCard({ product }: { product: any }) {
         <button
           className="w-full bg-black text-white rounded-md p-4 transition duration-300 ease-in-out
            hover:bg-gray-800 focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 active:scale-95"
-          onClick={() => onPurchase(product.p_id)}
+          onClick={() => onPurchase(product.product_id)}
         >
           Buy Now
         </button>
