@@ -1,3 +1,6 @@
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import pickle
 import numpy as np
 
@@ -19,3 +22,36 @@ def predict(data: list, model_loc: str = 'src\ml_model\PolyStock1.pkl'):
         prediction = model.predict(data)
         prediction = list(prediction)
         return prediction
+
+def send_email(data: list):
+    
+    data = ", ".join(data)
+    
+    sender_email = "opt.chatbot@gmail.com"
+    password = "yqttzxhfcxzlrxfd"  # Hardcoded for testing
+    receiver_email = "mansuriaafi@gmail.com"
+    subject = "Test Email"
+    body = f"The following products are about to expire please access the dashboard to take an action.\n {data}"
+
+    try:
+        # Use a context manager to manage the SMTP connection
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp_server:
+            smtp_server.starttls()  # Start TLS encryption
+            smtp_server.login(sender_email, password)  # Login to the SMTP server
+
+            # Create the email
+            message = MIMEMultipart()
+            message['From'] = sender_email
+            message['To'] = receiver_email
+            message['Subject'] = subject
+            message.attach(MIMEText(body, 'plain'))
+
+            # Send the email
+            smtp_server.sendmail(sender_email, receiver_email, message.as_string())
+
+        return {"message": "Email sent successfully"}
+
+    except smtplib.SMTPAuthenticationError:
+        return {"error": "Authentication failed. Check email credentials."}
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}

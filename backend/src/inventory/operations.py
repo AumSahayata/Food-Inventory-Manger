@@ -3,15 +3,44 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from .models import *
 from .schemas import *
 from sqlmodel import select, update, insert, case
-from .utils import predict
+from .utils import predict, send_email
 
 class InventoryOperations():
     
     async def get_products(self, vendor_id:str, session: AsyncSession):
-        statement = select(Products).where(Products.vendor_id == vendor_id)
+        statement = (select(
+            Products.name, 
+            Products.p_id, 
+            Products.category,  # Added category field here
+            Inventory.is_discounted, 
+            Inventory.discount_percentage, 
+            Products.price
+        ).join(
+            Inventory, Inventory.product_id == Products.p_id
+        )).where(
+            Inventory.vendor_id == vendor_id
+        )
         
+        # Execute the query
         result = await session.execute(statement)
-        return result.scalars().all()
+
+        # Fetch all results and format them into a list of dictionaries
+        products = result.all()
+
+        # Return the products in a structured format
+        formatted_products = [
+            {
+                "product_name": product[0],
+                "product_id": product[1],
+                "product_category": product[2],  # Added category to the response
+                "is_discounted": product[3],
+                "discount_percentage": product[4],
+                "price": product[5]
+            }
+            for product in products
+        ]
+        
+        return formatted_products
     
     async def get_batch_by_p_id(self, product_id:str, session: AsyncSession):
         statement = select(Inventory).where(Inventory.product_id == product_id).order_by(Inventory.expiry_date)
@@ -165,7 +194,10 @@ class InventoryOperations():
             await session.execute(insert_statement)
             
         await session.commit()
-
+        items = await self.get_today_expiry_product(vendor_id, session)
+        print("===================")
+        print(send_email(data=items))
+        print("+++++++++++++++++++++")
         return {"message": "Expiry table updated"}
     
     
@@ -220,3 +252,11 @@ class InventoryOperations():
         result = await session.execute(res)
         category = result.scalars().first()
         return category
+    
+    async def get_today_expiry_product(self, vendor_id: str, session: AsyncSession):
+        today = date.today()
+        statement = (select(Products.name).join(Expiry, Expiry.product_id == Products.p_id)).where(Expiry.date_added == today).where(Expiry.vendor_id == vendor_id)
+
+        # Execute the query
+        result = await session.execute(statement)
+        return result.scalars().all()

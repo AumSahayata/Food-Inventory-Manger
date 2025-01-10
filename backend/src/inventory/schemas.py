@@ -1,12 +1,13 @@
-from typing import List
 from pydantic import BaseModel
 from datetime import date
 import uuid
 
 class ProductModel(BaseModel):
-    p_id: uuid.UUID
-    name: str
-    category: str
+    product_name: str
+    product_id: uuid.UUID
+    product_category: str
+    is_discounted: bool
+    discount_percentage: float
     price: float
 
 class AddProductModel(BaseModel):
