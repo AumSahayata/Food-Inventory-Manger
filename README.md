@@ -1,1 +1,1 @@
-# Food-Inventory-Manger
+# Food-Inventory-Manager
